@@ -1,0 +1,7 @@
+# -*- conf -*-
+
+auto-save-list/
+gen/
+url/
+*.elc
+vendor/libs/misc

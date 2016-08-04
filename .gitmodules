@@ -1,0 +1,149 @@
+# -*- conf -*-
+
+[submodule "vendor/libs/f"]
+	path = vendor/libs/f
+	url = https://github.com/rejeep/f.el.git
+[submodule "vendor/libs/s"]
+	path = vendor/libs/s
+	url = https://github.com/magnars/s.el
+[submodule "vendor/libs/dash"]
+	path = vendor/libs/dash
+	url = https://github.com/magnars/dash.el
+[submodule "vendor/modes/utils/autopair"]
+	path = vendor/modes/utils/autopair
+	url = https://github.com/joaotavora/autopair
+[submodule "vendor/modes/utils/cmake-font-lock"]
+	path = vendor/modes/utils/cmake-font-lock
+	url = https://github.com/Lindydancer/cmake-font-lock
+[submodule "vendor/modes/utils/company"]
+	path = vendor/modes/utils/company
+	url = https://github.com/company-mode/company-mode
+[submodule "vendor/modes/utils/company-scm"]
+	path = vendor/modes/utils/company-scm
+	url = https://github.com/mytoh/company-scheme
+[submodule "vendor/modes/prog/company-c-headers"]
+	path = vendor/modes/utils/company-c-headers
+	url = https://github.com/randomphrase/company-c-headers
+[submodule "vendor/modes/utils/hl-num"]
+	path = vendor/modes/utils/hl-num
+	url = https://github.com/Fanael/highlight-numbers
+[submodule "vendor/modes/utils/hl-quoted"]
+	path = vendor/modes/utils/hl-quoted
+	url = https://github.com/Fanael/highlight-quoted
+[submodule "vendor/modes/utils/qmake"]
+	path = vendor/modes/utils/qmake
+	url = https://github.com/inlinechan/qmake-mode
+[submodule "vendor/modes/utils/rainbow-delim"]
+	path = vendor/modes/utils/rainbow-delim
+	url = https://github.com/Fanael/rainbow-delimiters
+[submodule "vendor/libs/parent"]
+	path = vendor/libs/parent
+	url = https://github.com/Fanael/parent-mode
+[submodule "vendor/modes/prog/glsl"]
+	path = vendor/modes/prog/glsl
+	url = https://github.com/jimhourihan/glsl-mode
+[submodule "vendor/modes/prog/lua"]
+	path = vendor/modes/prog/lua
+	url = https://github.com/immerrr/lua-mode
+[submodule "vendor/modes/prog/js"]
+	path = vendor/modes/prog/js
+	url = https://github.com/mooz/js2-mode
+[submodule "vendor/modes/prog/yml"]
+	path = vendor/modes/prog/yml
+	url = https://github.com/yoshiki/yaml-mode
+[submodule "vendor/modes/prog/sly"]
+	path = vendor/modes/prog/sly
+	url = https://github.com/joaotavora/sly
+[submodule "vendor/modes/prog/php"]
+	path = vendor/modes/prog/php
+	url = https://github.com/ejmr/php-mode
+[submodule "vendor/modes/prog/web"]
+	path = vendor/modes/prog/web
+	url = https://github.com/fxbois/web-mode
+[submodule "vendor/modes/prog/fs"]
+	path = vendor/modes/prog/fs
+	url = https://github.com/fsharp/emacs-fsharp-mode
+[submodule "vendor/modes/prog/groovy"]
+	path = vendor/modes/prog/groovy
+	url = https://github.com/emacsmirror/groovy-mode
+[submodule "vendor/ui/themes/flatland"]
+	path = vendor/ui/themes/flatland
+	url = https://github.com/gchp/flatland-emacs
+[submodule "vendor/modes/prog/cc1x-font-lock"]
+	path = vendor/modes/prog/cc1x-font-lock
+	url = https://github.com/ludwigpacifici/modern-cpp-font-lock
+[submodule "vendor/ui/themes/spacemacs"]
+	path = vendor/ui/themes/spacemacs
+	url = https://github.com/nashamri/spacemacs-theme
+[submodule "vendor/ui/themes/solarized"]
+	path = vendor/ui/themes/solarized
+	url = https://github.com/bbatsov/solarized-emacs
+[submodule "vendor/ui/themes/material"]
+	path = vendor/ui/themes/material
+	url = https://github.com/cpaulik/emacs-material-theme
+[submodule "vendor/ui/themes/tao"]
+	path = vendor/ui/themes/tao
+	url = https://github.com/11111000000/tao-theme-emacs
+[submodule "vendor/ui/themes/ample"]
+	path = vendor/ui/themes/ample
+	url = https://github.com/jordonbiondo/ample-theme
+[submodule "vendor/modes/prog/n-lsp"]
+	path = vendor/modes/prog/newlisp
+	url = https://github.com/kosh04/newlisp-mode
+[submodule "vendor/modes/prog/clj"]
+	path = vendor/modes/prog/clj
+	url = https://github.com/clojure-emacs/clojure-mode
+[submodule "vendor/modes/prog/cider"]
+	path = vendor/modes/prog/cider
+	url = https://github.com/clojure-emacs/cider
+[submodule "vendor/libs/spinner"]
+	path = vendor/libs/spinner
+	url = https://github.com/Malabarba/spinner.el
+[submodule "vendor/modes/prog/paredit"]
+	path = vendor/modes/prog/paredit
+	url = https://github.com/emacsmirror/paredit
+[submodule "vendor/modes/prog/mmm"]
+	path = vendor/modes/prog/mmm
+	url = https://github.com/purcell/mmm-mode
+[submodule "vendor/modes/utils/ggtags"]
+	path = vendor/modes/utils/ggtags
+	url = https://github.com/leoliu/ggtags
+[submodule "vendor/modes/prog/cedet"]
+	path = vendor/modes/prog/cedet
+	url = git://git.code.sf.net/p/cedet/git
+[submodule "vendor/modes/utils/c-eldoc"]
+	path = vendor/modes/utils/c-eldoc
+	url = https://github.com/nflath/c-eldoc
+[submodule "vendor/modes/utils/company-c-headers"]
+	path = vendor/modes/utils/company-c-headers
+	url = https://github.com/randomphrase/company-c-headers
+[submodule "vendor/modes/utils/sr-speedbar"]
+	path = vendor/modes/utils/sr-speedbar
+	url = https://github.com/emacsmirror/sr-speedbar
+[submodule "vendor/modes/utils/paredit"]
+	path = vendor/modes/utils/paredit
+	url = https://github.com/emacsmirror/paredit
+[submodule "vendor/modes/prog/pl"]
+	path = vendor/modes/prog/pl
+	url = https://github.com/jrockway/cperl-mode
+[submodule "vendor/libs/queue"]
+	path = vendor/libs/queue
+	url = https://github.com/emacsmirror/queue
+[submodule "vendor/libs/seq"]
+	path = vendor/libs/seq
+	url = https://github.com/NicolasPetton/seq.el
+[submodule "vendor/modes/utils/scm-complete"]
+	path = vendor/modes/utils/scm-complete
+	url = https://github.com/ashinn/scheme-complete
+[submodule "vendor/ui/themes/spacegray"]
+	path = vendor/ui/themes/spacegray
+	url = https://github.com/nhunzaker/spacegray-emacs
+[submodule "vendor/ui/themes/niflheim"]
+	path = vendor/ui/themes/niflheim
+	url = https://github.com/niflheim-theme/emacs
+[submodule "vendor/modes/utils/md"]
+	path = vendor/modes/utils/md
+	url = https://github.com/jrblevin/markdown-mode
+[submodule "vendor/modes/prog/rkt"]
+	path = vendor/modes/prog/rkt
+	url = https://github.com/greghendershott/racket-mode
