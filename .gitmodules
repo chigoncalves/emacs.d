@@ -108,9 +108,6 @@
 [submodule "vendor/modes/utils/ggtags"]
 	path = vendor/modes/utils/ggtags
 	url = https://github.com/leoliu/ggtags
-[submodule "vendor/modes/prog/cedet"]
-	path = vendor/modes/prog/cedet
-	url = git://git.code.sf.net/p/cedet/git
 [submodule "vendor/modes/utils/c-eldoc"]
 	path = vendor/modes/utils/c-eldoc
 	url = https://github.com/nflath/c-eldoc
@@ -147,3 +144,18 @@
 [submodule "vendor/modes/prog/rkt"]
 	path = vendor/modes/prog/rkt
 	url = https://github.com/greghendershott/racket-mode
+[submodule "vendor/modes/prog/jdee"]
+	path = vendor/modes/prog/jdee
+	url = https://github.com/jdee-emacs/jdee
+[submodule "vendor/modes/prog/ecb"]
+	path = vendor/modes/prog/ecb
+	url = https://github.com/emacsmirror/ecb
+[submodule "vendor/libs/popup"]
+	path = vendor/libs/popup
+	url = https://github.com/auto-complete/popup-el
+[submodule "vendor/modes/prog/eclim"]
+	path = vendor/modes/prog/eclim
+	url = https://github.com/senny/emacs-eclim
+[submodule "vendor/modes/prog/slime"]
+	path = vendor/modes/prog/slime
+	url = https://github.com/slime/slime/

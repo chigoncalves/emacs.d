@@ -133,6 +133,7 @@
 
 (defun chi-lisp-mode-hook ()
   "Generic hook for languages in the lisp family."
+  (autopair-mode -1)
   (enable-paredit-mode)
   (ruler-mode 1)
   (rainbow-delimiters-mode 1)
@@ -254,8 +255,8 @@
 	      (setq-local sh-indentation 2)))
 
 (setq geiser-guile-load-init-file-p t)
-(setq geiser-repl-history-filename (chi-path-join
-				    +chi-emacs-gen-dir+
+(setq geiser-repl-history-filename (concat
+				    chi-artifacts-drectory
 				    "geiser-history"))
 (setq geiser-active-implementations '(guile racket))
 (setq geiser-repl-history-size 1000)

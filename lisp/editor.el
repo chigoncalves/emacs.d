@@ -43,28 +43,28 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 		  (funcall fn (kbd key) #'ignore)) keystr-or-keylst)))
     t))
 
-(defun chi-initialize-path ()
+(defun chi-initialize-shell-PATH ()
   (shell-command-to-string "${SHELL}"))
 
-(defconst +chi-emacs-gen-dir+ (chi-path-join user-emacs-directory
-					     "gen")
-  "Directory where to store generated files")
+(defconst chi-artifacts-drectory (file-name-as-directory (concat (file-name-as-directory user-emacs-directory)
+								 "artifacts"))
+  "Directory where to store generated files.")
+
 
 ;;; Overriding this function so it genarates ids file in the
 ;;; apropriate directory.
 (defun emacs-session-filename (id)
-  (chi-path-join +chi-emacs-gen-dir+ (concat "session." id)))
+  (concat chi-artifacts-drectory "session." id))
 
 
 ;;; Variable setting/modes activation.
 (show-paren-mode 1)
 (push '(font . "ubuntu mono-11") default-frame-alist)
 (setq create-lockfiles nil
-      eshell-directory-name +chi-emacs-gen-dir+
-      eshell-history-file-name (chi-path-join +chi-emacs-gen-dir+
-					      "eshell-history")
-      eshell-aliases-file (chi-path-join +chi-emacs-gen-dir+
-					"eshell-aliases")
+      eshell-directory-name chi-artifacts-drectory
+      eshell-history-file-name (concat chi-artifacts-drectory
+				       "eshell-history")
+      eshell-aliases-file (concat chi-artifacts-drectory "eshell-aliases")
       show-paren-style 'mixed
       show-paren-delay 0.2
       org-startup-folded 'show-all
@@ -77,11 +77,10 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
       european-calendar-style t
       calendar-week-start-day 1
       save-place t
-      savehist-file (chi-path-join +chi-emacs-gen-dir+
-				   "minibuffer-history")
+      savehist-file (concat chi-artifacts-drectory "minibuffer-history")
       history-length 15
       history-delete-duplicates t
-      save-place-file (chi-path-join +chi-emacs-gen-dir+ "places")
+      save-place-file (concat chi-artifacts-drectory "places")
       case-fold-search t ;; do case insensitive match.
       case-replace nil   ;; do not preserve case when replaceing text.
       current-language-environment "utf-8"
@@ -101,6 +100,7 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
       set-mark-command-repeat-pop t
       read-buffer-completion-ignore-case t
       initial-scratch-message nil
+      custom-file (concat chi-artifacts-drectory "customizations.el")
       completion-ignored-extensions (append '(".out" ".exe")
 					    completion-ignored-extensions)
       frame-title-format '(:eval (if buffer-file-name
@@ -139,8 +139,8 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 	(when (fboundp procedure)
 	  (funcall procedure -1)))
 
-(unless (file-exists-p +chi-emacs-gen-dir+)
-  (make-directory +chi-emacs-gen-dir+))
+(unless (file-exists-p chi-artifacts-drectory)
+  (make-directory chi-artifacts-drectory))
 
 ;;; Do not give away clipboard ownership when exiting.
 (when (display-graphic-p)
@@ -158,33 +158,37 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 
 (defun chi-rst-mode-hook ()
   (when (and buffer-file-name
-	     (string-match-p "\\(.*-\\)?notas\.rst$" buffer-file-name))
+	     (string-match-p "\\(.*-\\)?not[ae]s\.rst$" buffer-file-name))
     (setq-local ispell-dictionary "portugues")))
 
 (add-hook 'rst-mode-hook #'chi-rst-mode-hook)
 
-(defun chi-ido-mode-hook ()
-  (setq  ido-enable-flex-matching t
-	 ido-enable-dot-prefix t
-	 ido-create-new-buffer 'always
-	 ido-save-directory-list-file
-	 (chi-path-join +chi-emacs-gen-dir+
-			"ido-history")
+(setq  ido-enable-flex-matching t
+       ido-enable-dot-prefix t
+       ido-create-new-buffer 'always
+       ido-save-directory-list-file
+       (concat chi-artifacts-drectory "ido-history")
+       ido-ignore-directories (cons "build" ido-ignore-directories)
 
-	 ido-ignore-directories (cons "build"
-				      ido-ignore-directories)
+       ido-ignore-buffers (append  '("\\*WoMan-Log\\*"
+				     "\\*Messages\\*"
+				     "\\*Compile-Log\\*"
+				     "\\*Backtrace\\*"
+				     "\\*Completions\\*"
+				     "\\*Help\\*"
+				     "\\*wclock\\*"
+				     "\\*Clang-Output\\*"
+				     "\\*Clang-Error\\*"
+				     "\\*Buffer List\\*"
+				     "\\*Warnings\\*")
+				   ido-ignore-buffers))
 
-	 ido-ignore-buffers (append  '("\\*WoMan-Log\\*" "\\*Messages\\*"
-				       "\\*Compile-Log\\*" "\\*Backtrace\\*"
-				       "\\*Completions\\*" "\\*Help\\*"
-				       "\\*wclock\\*" "\\*Clang-Output\\*"
-				       "\\*Clang-Error\\*" "\\*Buffer List\\*"
-				       "\\*Warnings\\*")
-				     ido-ignore-buffers)))
+(add-hook 'text-mode-hook
+	  #'(lambda ()
+	      (ruler-mode 1)
+	      (autopair-mode 1)
+	      (linum-mode 1)))
 
-
-(add-hook 'ido-setup-hook #'chi-ido-mode-hook)
-
-(chi-initialize-path)
+(chi-initialize-shell-PATH)
 
 (provide 'editor)
