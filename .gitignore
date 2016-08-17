@@ -1,8 +1,8 @@
 # -*- conf -*-
 
 auto-save-list/
-gen/
-url/
+colour-schemes
 *.elc
 vendor/libs/misc
 artifacts
+ecb/

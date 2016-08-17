@@ -1,10 +1,20 @@
 ;;;; editor.el
 
+
+(eval-when-compile
+  (require 'cl))
+
 ;;; autoloads.
 (autoload 'autopair-mode "autopair" "Autoload `autopair-mode'")
 
 
 ;;; Functions definitions.
+
+(defun chi-load-theme-advice (func theme &optional no-confirm no-enable)
+  (mapc #'disable-theme custom-enabled-themes)
+  (funcall func theme no-confirm no-enable))
+
+(advice-add 'load-theme :around #'chi-load-theme-advice)
 
 (cl-defun chi-set-key (key func &key (global nil))
   "Binds a KEY to FUNC. If GLOBAL is non nil then, the new kibing will
@@ -45,11 +55,6 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 
 (defun chi-initialize-shell-PATH ()
   (shell-command-to-string "${SHELL}"))
-
-(defconst chi-artifacts-drectory (file-name-as-directory (concat (file-name-as-directory user-emacs-directory)
-								 "artifacts"))
-  "Directory where to store generated files.")
-
 
 ;;; Overriding this function so it genarates ids file in the
 ;;; apropriate directory.
@@ -117,7 +122,7 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 				("Europe/Berlin" "Berlim")
 				("Europe/Madrid" "Madrid")))
 
-(load-theme 'spacemacs-dark t)
+(load-theme 'doom-one t)
 (chi-set-key (kbd "C-c C-t d") #'display-time-world :global t)
 (chi-ignore-key '( "<left>" "<right>" "<down>" "<up>" "C-x C-+" "C-x C--"
 			"C-x C-n")  :global t)
