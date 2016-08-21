@@ -1,20 +1,32 @@
 ;;;; editor.el
 
-
 (eval-when-compile
-  (require 'cl))
+  (require 'cl)
+  (require 'neotree)
+  (require 'smex))
 
-;;; autoloads.
-(autoload 'autopair-mode "autopair" "Autoload `autopair-mode'")
+(eval-after-load "startup"
+  (fset #'display-startup-echo-area-message #'ignore))
+
+;; Functions.
+
+(defun chi-rst-mode-hook ()
+  (when (and buffer-file-name
+	     (string-match-p "\\(.*-\\)?not[ae]s\.rst$" buffer-file-name))
+    (setq-local ispell-dictionary "portugues")))
 
 
-;;; Functions definitions.
+(defun chi-text-mode-hook ()
+  "Hook to be called by any mode that derives from `text-mode'."
+  (flyspell-mode 1)
+  (ruler-mode 1)
+  (autopair-mode 1)
+  (linum-mode 1))
 
 (defun chi-load-theme-advice (func theme &optional no-confirm no-enable)
+  "Advice for procedure `load-theme'."
   (mapc #'disable-theme custom-enabled-themes)
   (funcall func theme no-confirm no-enable))
-
-(advice-add 'load-theme :around #'chi-load-theme-advice)
 
 (cl-defun chi-set-key (key func &key (global nil))
   "Binds a KEY to FUNC. If GLOBAL is non nil then, the new kibing will
@@ -23,21 +35,6 @@ be available in other buffers."
 		  #'global-set-key
 		#'local-set-key)))
     (funcall set-key-func key func)))
-
-(defun chi-path-join (&rest paths)
-  "Concatenate each path in PATHS using the operating system path
-separator."
-  (let ((path-separator "/")
-	(replace-str "/")
-	full-path)
-    (when (eq system-type 'windows-nt)
-      (setq path-separator "\\"
-	    replace-str "\\\\"))
-
-    (setq full-path (mapconcat #'identity paths path-separator))
-    (replace-regexp-in-string (format "[%s]+" path-separator)
-			      replace-str
-			      full-path)))
 
 (defun chi-ignore-key (keystr-or-keylst &keys global)
   "Ignores a key or a list of keys, i.e. disables them.
@@ -53,18 +50,25 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 		  (funcall fn (kbd key) #'ignore)) keystr-or-keylst)))
     t))
 
+(defun chi-neotree-hook ()
+  "Hook to be invoked when `neotree-mode' gets activated."
+  (message "Neotree...")
+  (other-window 1))
+
 (defun chi-initialize-shell-PATH ()
+  "Initializes my environment path."
   (shell-command-to-string "${SHELL}"))
 
-;;; Overriding this function so it genarates ids file in the
-;;; apropriate directory.
 (defun emacs-session-filename (id)
+  "Overriding this function so it genarates ids file in the
+ appropriate directory. "
   (concat chi-artifacts-drectory "session." id))
 
 
-;;; Variable setting/modes activation.
-(show-paren-mode 1)
-(push '(font . "ubuntu mono-11") default-frame-alist)
+;; Entry point.
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
 (setq create-lockfiles nil
       eshell-directory-name chi-artifacts-drectory
       eshell-history-file-name (concat chi-artifacts-drectory
@@ -120,13 +124,37 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 				("Atlantic/Azores" "Açores")
 				("Atlantic/Madeira" "Madeira")
 				("Europe/Berlin" "Berlim")
-				("Europe/Madrid" "Madrid")))
+				("Europe/Madrid" "Madrid"))
+      uniquify-separator "/"
+      uniquify-buffer-name-style 'forward
+      uniquify-min-dir-content 1
+      ido-vertical-disable-if-short t
+      ido-vertical-define-keys 'C-n-C-p-up-down-left-right
+      ido-vertical-indicator "▸"
+      tab-width 2
+      fill-column 69
+      smex-auto-update nil
+      smex-history-length 20
+      smex-prompt-string "[M-x] "
+			smex-save-file (concat chi-artifacts-drectory "smex-items"))
+
+(autoload 'autopair-mode "autopair" "Autoload `autopair-mode'")
+(autoload 'ido-vertical-mode "ido-vertical-mode"
+  "Autoload `ido-vertical-mode'.")
+(autoload 'smex-initialize "smex" "Autoload `smex'")
+(autoload 'neotree-toggle "neotree" "Neotree.")
+
+(advice-add 'load-theme :around #'chi-load-theme-advice)
+
+;;; Variable setting/modes activation.
+
+(show-paren-mode 1)
+(push '(font . "Office Code Pro 11") default-frame-alist)
 
 (load-theme 'doom-one t)
 (chi-set-key (kbd "C-c C-t d") #'display-time-world :global t)
 (chi-ignore-key '( "<left>" "<right>" "<down>" "<up>" "C-x C-+" "C-x C--"
 			"C-x C-n")  :global t)
-
 (require 'saveplace)
 (size-indication-mode 1)
 (display-time)
@@ -135,10 +163,31 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 (auto-save-mode -1)
 (ido-mode 1)
 (ido-everywhere 1)
+(ido-vertical-mode 1)
+(smex-initialize)
 (blink-cursor-mode 1)
 (column-number-mode 1)
 (fringe-mode '(nil . 0))
 (savehist-mode 1)
+
+(setq  ido-enable-flex-matching t
+       ido-enable-dot-prefix t
+       ido-create-new-buffer 'always
+       ido-save-directory-list-file (concat chi-artifacts-drectory "ido-last.el")
+       ido-ignore-directories (append '("\\`build/" "\\`artifacts/") ido-ignore-directories)
+
+       ido-ignore-buffers (append  '("\\*WoMan-Log\\*"
+				     "\\*Messages\\*"
+				     "\\*Compile-Log\\*"
+				     "\\*Backtrace\\*"
+				     "\\*Completions\\*"
+				     "\\*Help\\*"
+				     "\\*wclock\\*"
+				     "\\*Clang-Output\\*"
+				     "\\*Clang-Error\\*"
+				     "\\*Buffer List\\*"
+				     "\\*Warnings\\*")
+				   ido-ignore-buffers))
 
 (dolist (procedure '(tool-bar-mode scroll-bar-mode))
 	(when (fboundp procedure)
@@ -154,46 +203,21 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 (chi-set-key (kbd "C-c f") #'toggle-frame-fullscreen :global t)
 (chi-set-key (kbd "\r") #'newline-and-indent :global t)
 
-(fset 'yes-or-no-p 'y-or-n-p)
-
-(eval-after-load "startup" '(fset #'display-startup-echo-area-message #'ignore))
-
-
-;;; Hooks.
-
-(defun chi-rst-mode-hook ()
-  (when (and buffer-file-name
-	     (string-match-p "\\(.*-\\)?not[ae]s\.rst$" buffer-file-name))
-    (setq-local ispell-dictionary "portugues")))
-
 (add-hook 'rst-mode-hook #'chi-rst-mode-hook)
 
-(setq  ido-enable-flex-matching t
-       ido-enable-dot-prefix t
-       ido-create-new-buffer 'always
-       ido-save-directory-list-file
-       (concat chi-artifacts-drectory "ido-history")
-       ido-ignore-directories (cons "build" ido-ignore-directories)
-
-       ido-ignore-buffers (append  '("\\*WoMan-Log\\*"
-				     "\\*Messages\\*"
-				     "\\*Compile-Log\\*"
-				     "\\*Backtrace\\*"
-				     "\\*Completions\\*"
-				     "\\*Help\\*"
-				     "\\*wclock\\*"
-				     "\\*Clang-Output\\*"
-				     "\\*Clang-Error\\*"
-				     "\\*Buffer List\\*"
-				     "\\*Warnings\\*")
-				   ido-ignore-buffers))
-
-(add-hook 'text-mode-hook
-	  #'(lambda ()
-	      (ruler-mode 1)
-	      (autopair-mode 1)
-	      (linum-mode 1)))
-
 (chi-initialize-shell-PATH)
+
+(chi-set-key (kbd "M-x") #'smex :global)
+(chi-set-key (kbd "<f6>") #'neotree-toggle :global)
+(chi-set-key (kbd "C-c C-c n") #'neotree-toggle :global)
+
+(add-hook 'neotree-mode-hook #'chi-neotree-hook)
+(global-set-key (kbd "M-S-x") 'smex-major-mode-commands)
+
+(let ((info-path (getenv "CHI_INFO_DIR")))
+  (when info-path
+    (setq Info-additional-directory-list (split-string info-path ":"))))
+
+(add-hook 'text-mode-hook #'chi-text-mode-hook)
 
 (provide 'editor)

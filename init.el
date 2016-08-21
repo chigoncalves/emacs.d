@@ -4,13 +4,14 @@
   (setq load-prefer-newer t))
 
 ;; restore to `defvar'
-(setq chi-artifacts-drectory (concat (file-name-as-directory user-emacs-directory)
-					 "artifacts"))
-  ;; "Directory where to store generated files.")
+(defvar chi-artifacts-drectory (concat (file-name-as-directory user-emacs-directory)
+				       "artifacts")
+  "Directory where to store generated files.")
 
+(setq user-emacs-directory  (file-name-as-directory (expand-file-name user-emacs-directory)))
 
 (defun chi-load-directory (name)
-  (setq name (file-name-as-directory (expand-file-name name)))
+  (setq name (file-name-as-directory name))
   (when (file-directory-p name)
     (let* ((directories (list name))
 	  (ignore-files-pattern "^[a-zA-Z0-9_-]")
@@ -58,8 +59,8 @@
 		    (push current-directory load-path)))))))))))))
 
 
-(chi-load-directory "lisp")
-(chi-load-directory "vendor")
+(chi-load-directory (concat user-emacs-directory "lisp"))
+(chi-load-directory (concat user-emacs-directory "vendor"))
 
 (setq chi-artifacts-drectory (file-name-as-directory chi-artifacts-drectory))
 
@@ -68,8 +69,6 @@
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
-
-(global-set-key (kbd "C-c m") #'toggle-frame-maximized)
 
 (global-set-key (kbd "C-c C-f") #'rtags-find-symbol-at-point)
 
