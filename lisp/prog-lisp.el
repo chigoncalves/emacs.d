@@ -20,13 +20,12 @@
 (defun chi-compile-current-buffer-file ()
   "This function compiles any ELisp file on save."
   (interactive)
-  (when (eq major-mode 'emacs-lisp-mode)
+  (when (and buffer-file-name (eq major-mode 'emacs-lisp-mode))
     (let ((compiled-file (replace-regexp-in-string "\\.el"
 						    ".elc"
 						    buffer-file-name))
 	  (file-basename (file-name-nondirectory buffer-file-name)))
-      (if (and buffer-file-name
-	       (not (member buffer-file-name
+      (if (and (not (member file-basename
 			    chi--files-to-ignore-when-compiling))
 	       (or (not (file-exists-p compiled-file))
 		   (file-newer-than-file-p buffer-file-name compiled-file)))
@@ -54,7 +53,8 @@
 ;; Entry point.
 
 (defvar chi--files-to-ignore-when-compiling  '("init.el"
-					       ".dir-locals.el")
+					       ".dir-locals.el"
+					       "c11-mode.el")
   "Files to be ignore by `chi-compile-current-buffer-file'.")
 
 (fset 'clj-mode 'clojure-mode)

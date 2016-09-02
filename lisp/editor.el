@@ -10,15 +10,33 @@
 
 ;; Functions.
 
+(defun chi-frame-lost-focus-hook ()
+  "Hook to be invoked when a frame loses focus."
+  (save-some-buffers t))
+
 (defun chi-rst-mode-hook ()
+  (setq rst-preferred-adornments '((?* over-and-under 1)
+				   (?= simple 0)
+				   (?- simple 0)
+				   (?^ simple 0)
+				   (?# over-and-under 2)
+				   (?\" simple 0)))
   (when (and buffer-file-name
 	     (string-match-p "\\(.*-\\)?not[ae]s\.rst$" buffer-file-name))
     (setq-local ispell-dictionary "portugues")))
 
+(defun chi-after-save-hook ()
+  "Hook to be run after file is saved."
+  (ispell-buffer))
+
+(defun chi-before-save-hook ()
+  "Hook to be called before saving a file to disk."
+  (let ((directory (file-name-directory buffer-file-name)))
+    (unless (file-exists-p directory)
+      (make-directory directory))))
 
 (defun chi-text-mode-hook ()
   "Hook to be called by any mode that derives from `text-mode'."
-  (flyspell-mode 1)
   (ruler-mode 1)
   (autopair-mode 1)
   (linum-mode 1))
@@ -136,7 +154,14 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
       smex-auto-update nil
       smex-history-length 20
       smex-prompt-string "[M-x] "
-			smex-save-file (concat chi-artifacts-drectory "smex-items"))
+      smex-save-file (concat chi-artifacts-drectory "smex-items")
+      ;; initial-buffer-choice t
+      blink-cursor-blinks 5
+      frame-resize-pixelwise t
+      window-resize-pixelwise t
+      right-divider-width 5
+      bottom-divider-width 5
+      buffer-save-without-query t)
 
 (autoload 'autopair-mode "autopair" "Autoload `autopair-mode'")
 (autoload 'ido-vertical-mode "ido-vertical-mode"
@@ -149,7 +174,7 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 ;;; Variable setting/modes activation.
 
 (show-paren-mode 1)
-(push '(font . "Office Code Pro 11") default-frame-alist)
+
 
 (load-theme 'doom-one t)
 (chi-set-key (kbd "C-c C-t d") #'display-time-world :global t)
@@ -173,7 +198,7 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 (setq  ido-enable-flex-matching t
        ido-enable-dot-prefix t
        ido-create-new-buffer 'always
-       ido-save-directory-list-file (concat chi-artifacts-drectory "ido-last.el")
+       ido-save-directory-list-file (concat chi-artifacts-drectory "ido-last")
        ido-ignore-directories (append '("\\`build/" "\\`artifacts/") ido-ignore-directories)
 
        ido-ignore-buffers (append  '("\\*WoMan-Log\\*"
@@ -188,6 +213,9 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 				     "\\*Buffer List\\*"
 				     "\\*Warnings\\*")
 				   ido-ignore-buffers))
+
+(setq default-frame-alist (append '((font . "Office Code Pro 10"))
+				  default-frame-alist))
 
 (dolist (procedure '(tool-bar-mode scroll-bar-mode))
 	(when (fboundp procedure)
@@ -206,6 +234,7 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 (add-hook 'rst-mode-hook #'chi-rst-mode-hook)
 
 (chi-initialize-shell-PATH)
+;; (require 'smex)
 
 (chi-set-key (kbd "M-x") #'smex :global)
 (chi-set-key (kbd "<f6>") #'neotree-toggle :global)
@@ -218,6 +247,12 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
   (when info-path
     (setq Info-additional-directory-list (split-string info-path ":"))))
 
+(add-hook 'focus-out-hook #'chi-frame-lost-focus-hook)
 (add-hook 'text-mode-hook #'chi-text-mode-hook)
+;; (add-hook 'after-save-hook #'chi-after-save-hook)
+(add-hook 'before-save-hook #'chi-before-save-hook)
+
+(load custom-file :no-error)
+
 
 (provide 'editor)

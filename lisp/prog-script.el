@@ -53,7 +53,8 @@
 (defun chi-ruby-mode-hook ()
   "A hook to be invoked when `ruby-mode' gets activated."
   (setq-local ruby-indent-level 2)
-  (setq-local ruby-indent-tabs-mode nil))
+  (setq-local ruby-indent-tabs-mode nil)
+  (inf-ruby-minor-mode 1))
 
 (defun chi-python-mode-hook ()
   "Hook to be invoked when `python-modes' is activated."
@@ -104,6 +105,9 @@ if it has a shebang."
 (autoload 'php-mode "php-mode"
   "Major mode for PHP programming language.")
 (push '("\\.php$" . php-mode) auto-mode-alist)
+
+(autoload 'inf-ruby-minor-mode "inf-ruby"
+  "Inferior Ruby mode.")
 
 (add-hook 'cperl-mode-hook #'chi-cperl-mode-hook)
 (add-hook 'lua-mode-hook #'chi-lisp-mode-hook)

@@ -201,3 +201,15 @@
 [submodule "vendor/modes/utils/nlinum"]
 	path = vendor/modes/utils/nlinum
 	url = https://github.com/emacsmirror/nlinum
+[submodule "vendor/modes/prog/tuareg"]
+	path = vendor/modes/prog/tuareg
+	url = https://github.com/ocaml/tuareg
+[submodule "vendor/modes/prog/hs"]
+	path = vendor/modes/prog/hs
+	url = https://github.com/haskell/haskell-mode
+[submodule "vendor/modes/prog/l"]
+	path = vendor/modes/prog/l
+	url = https://github.com/flexibeast/picolisp-mode
+[submodule "vendor/ui/themes/rin"]
+	path = vendor/ui/themes/rin
+	url = https://github.com/rxse/emacs-rin-theme

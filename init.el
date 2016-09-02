@@ -71,7 +71,3 @@
 (put 'downcase-region 'disabled nil)
 
 (global-set-key (kbd "C-c C-f") #'rtags-find-symbol-at-point)
-
-
-
-;; return-from

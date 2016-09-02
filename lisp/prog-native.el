@@ -1,5 +1,9 @@
 ;;; prog-native.el
 
+(load "tuareg-site-file")
+(require 'haskell-mode-autoloads)
+
+
 
 ;; Function definitions.
 
@@ -52,6 +56,7 @@
 (add-hook 'c-mode-hook #'chi-c-mode-hook)
 (add-hook 'c-mode-common-hook #'chi-c-mode-common-hook)
 (add-hook 'cmake-mode-hook  #'cmake-font-lock-activate)
+
 
 (chi-set-key (kbd "C-c C-h m") #'(lambda ()
 				   (interactive)
