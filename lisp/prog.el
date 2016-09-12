@@ -16,7 +16,7 @@
   (highlight-numbers-mode 1)
   (linum-mode 1)
   (ruler-mode 1)
-  (flyspell-prog-mode)
+  ;; (flyspell-prog-mode)
   (company-mode 1))
 
 (defun chi-speedbar-mode-hook ()
@@ -47,13 +47,22 @@
 (autoload 'company-mode "company"
   "Autoload `company-mode' text completion.")
 
+(autoload 'highlight-numbers-mode "highlight-numbers"
+  "Minor mode to highlight numbers.")
+
 (autoload 'projectile-project-name "projectile")
 
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 (add-hook 'prog-mode-hook #'chi-prog-mode-hook)
 (add-hook 'speedbar-mode-hook #'chi-speedbar-mode-hook)
 
-(dolist (filename '("hgignore" "git/config" "gitignore" "gitmodules"))
+(dolist (filename '("hgignore"
+		    "hgsub"
+		    "hgsubstate"
+		    "git/config"
+		    "gitignore"
+		    "gitmodules"
+		    "COMMIT_EDITMSG"))
   (push (cons (concat "\\." filename) 'conf-mode) auto-mode-alist))
 
 (advice-add 'neo-buffer--insert-fold-symbol :override 'doom*neo-insert-fold-symbol)

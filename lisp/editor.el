@@ -5,14 +5,33 @@
   (require 'neotree)
   (require 'smex))
 
+(defvar windowsp (if (eq system-type  'windows-nt)
+		     t
+		   nil)
+  "Wheter we are running on Windows or not.")
+
 (eval-after-load "startup"
   (fset #'display-startup-echo-area-message #'ignore))
 
+
 ;; Functions.
+
+(defun --enable-speck ()
+  "Configuration for `speck-mode'."
+  (require 'speck)
+  (setq speck-engine (quote Hunspell)
+	speck-hunspell-program "/usr/bin/hunspell"
+	speck-hunspell-dictionary-alist '(("pt" . "pt_PT")
+					  ("en" . "en_US")
+					  ("de" . "de_DE")
+					  ("fr" . "fr_FR")
+					  ("es" . "en_SPA"))
+	speck-hunspell-default-dictionary-name "en")
+  (speck-mode 1))
 
 (defun chi-frame-lost-focus-hook ()
   "Hook to be invoked when a frame loses focus."
-  (save-some-buffers t))
+    (save-some-buffers t))
 
 (defun chi-rst-mode-hook ()
   (setq rst-preferred-adornments '((?* over-and-under 1)
@@ -25,10 +44,6 @@
 	     (string-match-p "\\(.*-\\)?not[ae]s\.rst$" buffer-file-name))
     (setq-local ispell-dictionary "portugues")))
 
-(defun chi-after-save-hook ()
-  "Hook to be run after file is saved."
-  (ispell-buffer))
-
 (defun chi-before-save-hook ()
   "Hook to be called before saving a file to disk."
   (let ((directory (file-name-directory buffer-file-name)))
@@ -39,6 +54,7 @@
   "Hook to be called by any mode that derives from `text-mode'."
   (ruler-mode 1)
   (autopair-mode 1)
+  (setq linum-format " %3d ")
   (linum-mode 1))
 
 (defun chi-load-theme-advice (func theme &optional no-confirm no-enable)
@@ -50,8 +66,8 @@
   "Binds a KEY to FUNC. If GLOBAL is non nil then, the new kibing will
 be available in other buffers."
   (let ((set-key-func (if global
-		  #'global-set-key
-		#'local-set-key)))
+			  #'global-set-key
+			#'local-set-key)))
     (funcall set-key-func key func)))
 
 (defun chi-ignore-key (keystr-or-keylst &keys global)
@@ -87,6 +103,14 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
+
+(autoload 'powerline-center-theme "powerline")1
+
+(unless windowsp
+  (setq ispell-program-name "hunspell"))
+
+(nconc completion-ignored-extensions '(".out" ".exe"))
+
 (setq create-lockfiles nil
       eshell-directory-name chi-artifacts-drectory
       eshell-history-file-name (concat chi-artifacts-drectory
@@ -95,7 +119,6 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
       show-paren-style 'mixed
       show-paren-delay 0.2
       org-startup-folded 'show-all
-      major-mode 'rst-mode
       inhibit-startup-message t
       message-log-max 5000
       display-time-interval 180
@@ -103,6 +126,7 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
       display-time-24hr-format t
       european-calendar-style t
       calendar-week-start-day 1
+      initial-major-mode 'rst-mode
       save-place t
       savehist-file (concat chi-artifacts-drectory "minibuffer-history")
       history-length 15
@@ -128,12 +152,11 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
       read-buffer-completion-ignore-case t
       initial-scratch-message nil
       custom-file (concat chi-artifacts-drectory "customizations.el")
-      completion-ignored-extensions (append '(".out" ".exe")
-					    completion-ignored-extensions)
+
       frame-title-format '(:eval (if buffer-file-name
 				     (file-name-nondirectory buffer-file-name)
 				   "%b"))
-      ispell-program-name "hunspell"
+
       display-time-world-list '(("Europe/Lisbon" "Lisboa")
 				("Atlantic/Cape_Verde" "Praia")
 				("Europe/Paris" "Nice")
@@ -161,13 +184,23 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
       window-resize-pixelwise t
       right-divider-width 5
       bottom-divider-width 5
-      buffer-save-without-query t)
+      buffer-save-without-query t
+      vc-follow-symlinks t
+      sentence-end-double-space nil
+      echo-keystrokes 0.3
+
+      )
 
 (autoload 'autopair-mode "autopair" "Autoload `autopair-mode'")
 (autoload 'ido-vertical-mode "ido-vertical-mode"
   "Autoload `ido-vertical-mode'.")
 (autoload 'smex-initialize "smex" "Autoload `smex'")
 (autoload 'neotree-toggle "neotree" "Neotree.")
+(autoload 'speck-mode "speck-mode" "Autoload `speck-mode'.")
+
+
+(dolist (filename '("\\.txt$" "\\.text$" "INSTALL$" "README$"))
+  (push (cons filename 'rst-mode) auto-mode-alist))
 
 (advice-add 'load-theme :around #'chi-load-theme-advice)
 
@@ -193,15 +226,12 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 (blink-cursor-mode 1)
 (column-number-mode 1)
 (fringe-mode '(nil . 0))
-(savehist-mode 1)
+(savehist-mode)
+(winner-mode)
 
-(setq  ido-enable-flex-matching t
-       ido-enable-dot-prefix t
-       ido-create-new-buffer 'always
-       ido-save-directory-list-file (concat chi-artifacts-drectory "ido-last")
-       ido-ignore-directories (append '("\\`build/" "\\`artifacts/") ido-ignore-directories)
-
-       ido-ignore-buffers (append  '("\\*WoMan-Log\\*"
+(nconc winner-boring-buffers '("*Compile-Log*" "*Apropos*"))
+(nconc ido-ignore-directories '("\\`build/" "\\`artifacts/"))
+(nconc ido-ignore-buffers '("\\*WoMan-Log\\*"
 				     "\\*Messages\\*"
 				     "\\*Compile-Log\\*"
 				     "\\*Backtrace\\*"
@@ -211,11 +241,13 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 				     "\\*Clang-Output\\*"
 				     "\\*Clang-Error\\*"
 				     "\\*Buffer List\\*"
-				     "\\*Warnings\\*")
-				   ido-ignore-buffers))
+				     "\\*Warnings\\*"))
+(setq  ido-enable-flex-matching t
+       ido-enable-dot-prefix t
+       ido-create-new-buffer 'always
+       ido-save-directory-list-file (concat chi-artifacts-drectory "ido-last"))
 
-(setq default-frame-alist (append '((font . "Office Code Pro 10"))
-				  default-frame-alist))
+(nconc default-frame-alist '((font . "Office Code Pro 10")))
 
 (dolist (procedure '(tool-bar-mode scroll-bar-mode))
 	(when (fboundp procedure)
@@ -234,14 +266,14 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 (add-hook 'rst-mode-hook #'chi-rst-mode-hook)
 
 (chi-initialize-shell-PATH)
-;; (require 'smex)
 
-(chi-set-key (kbd "M-x") #'smex :global)
-(chi-set-key (kbd "<f6>") #'neotree-toggle :global)
-(chi-set-key (kbd "C-c C-c n") #'neotree-toggle :global)
+(chi-set-key (kbd "M-x") #'smex :global t)
+(chi-set-key (kbd "<f6>") #'neotree-toggle :global t)
+(chi-set-key (kbd "C-c C-c n") #'neotree-toggle :global t)
 
 (add-hook 'neotree-mode-hook #'chi-neotree-hook)
-(global-set-key (kbd "M-S-x") 'smex-major-mode-commands)
+(chi-set-key (kbd "M-S-x") 'smex-major-mode-commands :global t)
+(chi-set-key (kbd "C-c s") #'cycle-spacing :global t)
 
 (let ((info-path (getenv "CHI_INFO_DIR")))
   (when info-path
@@ -249,10 +281,12 @@ KEYSTR-OR-KEYLST may be a string or a list of strings."
 
 (add-hook 'focus-out-hook #'chi-frame-lost-focus-hook)
 (add-hook 'text-mode-hook #'chi-text-mode-hook)
-;; (add-hook 'after-save-hook #'chi-after-save-hook)
 (add-hook 'before-save-hook #'chi-before-save-hook)
 
-(load custom-file :no-error)
+(powerline-center-theme)
 
+(setq powerline-gui-use-vcs-glyph t)
+
+(load custom-file :no-error)
 
 (provide 'editor)

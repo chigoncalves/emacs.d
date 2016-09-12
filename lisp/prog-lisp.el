@@ -20,7 +20,8 @@
 (defun chi-compile-current-buffer-file ()
   "This function compiles any ELisp file on save."
   (interactive)
-  (when (and buffer-file-name (eq major-mode 'emacs-lisp-mode))
+  (when (and buffer-file-name (eq major-mode 'emacs-lisp-mode)
+	     (string-match-p chi-lisp-directory buffer-file-name)
     (let ((compiled-file (replace-regexp-in-string "\\.el"
 						    ".elc"
 						    buffer-file-name))
@@ -29,7 +30,7 @@
 			    chi--files-to-ignore-when-compiling))
 	       (or (not (file-exists-p compiled-file))
 		   (file-newer-than-file-p buffer-file-name compiled-file)))
-	  (byte-compile-file buffer-file-name)))))
+	  (byte-compile-file buffer-file-name))))))
 
 (defun chi-geiser-mode-hook ()
   "Hook to be invoked when `geiser-mod' gets activated."
@@ -47,18 +48,20 @@
 (defun chi-emacs-lisp-hook ()
   "Hook to be run after activating `emacs-lisp-mode'."
   (eldoc-mode 1)
-  (checkdoc-minor-mode 1))
+  (setq eldoc-idle-delay 2)
+  (checkdoc-minor-mode 1)
+  (company-quickhelp-mode 1))
 
 
 ;; Entry point.
+
+(fset 'elisp-mode 'emacs-lisp-mode)
+(fset 'clj-mode 'clojure-mode)
 
 (defvar chi--files-to-ignore-when-compiling  '("init.el"
 					       ".dir-locals.el"
 					       "c11-mode.el")
   "Files to be ignore by `chi-compile-current-buffer-file'.")
-
-(fset 'clj-mode 'clojure-mode)
-(fset 'el-mode 'emacs-lisp-mode)
 
 (setq sly-default-lisp 'ccl
       sly-lisp-implementations '((ccl ("ccl" "-Q"))
@@ -66,7 +69,20 @@
 				 (sbcl ("sbcl"))
 				 (cmucl ("cmucl" "-quiet")))
       scheme-program-name "guile"
-      geiser-mode-auto-p nil)
+      geiser-mode-auto-p nil
+      compilation-scroll-output t)
+
+(setq geiser-guile-load-init-file-p t
+      geiser-repl-history-filename (concat
+				    chi-artifacts-drectory
+				    "geiser-history")
+      geiser-active-implementations '(guile racket)
+      geiser-repl-history-size 1000
+      geiser-repl-query-on-kill-p nil
+      geiser-autodoc-identifier-format "%s / %s"
+      geiser-guile-warning-level 'high
+      geiser-edit-symbol-method 'window
+      geiser-mode-smart-tab-p t)
 
 (autoload 'clojure-mode "clojure-mode" "Major mode for Clojure.")
 (push '("\\.clj$" . clojure-mode) auto-mode-alist)
@@ -87,6 +103,8 @@
 
 (autoload 'racket-mode "racket-mode" "Major mode for Racket.")
 (push '("\\.rkt$" . racket-mode) auto-mode-alist)
+
+(autoload 'company-quickhelp-mode "company-quickhelp")
 
 (autoload 'rainbow-delimiters-mode "rainbow-delimiters"
   "Minor mode to highlight parens.")

@@ -5,10 +5,11 @@
 
 ;; restore to `defvar'
 (defvar chi-artifacts-drectory (concat (file-name-as-directory user-emacs-directory)
-				       "artifacts")
+				       "cache")
   "Directory where to store generated files.")
 
 (setq user-emacs-directory  (file-name-as-directory (expand-file-name user-emacs-directory)))
+(defvar chi-lisp-directory (concat user-emacs-directory "lisp"))
 
 (defun chi-load-directory (name)
   (setq name (file-name-as-directory name))
@@ -24,6 +25,8 @@
 				    "docs"
 				    "example"
 				    "child-theme-example"
+				    "neotree-patched"
+				    "slime"
 				    "skeleton"
 				    "t"
 				    "test"

@@ -26,19 +26,12 @@
 
 ;; Entry point.
 
-(fset 'js-mode 'js2-mode)
+(autoload 'php-mode "php-mode"
+  "Major mode for PHP programming language.")
+(push '("\\.php$" . php-mode) auto-mode-alist)
+(push '("\\.template\\.php$" . web-mode) auto-mode-alist)
 
-(setq geiser-guile-load-init-file-p t
-      geiser-repl-history-filename (concat
-				    chi-artifacts-drectory
-				    "geiser-history")
-      geiser-active-implementations '(guile racket)
-      geiser-repl-history-size 1000
-      geiser-repl-query-on-kill-p nil
-      geiser-autodoc-identifier-format "%s / %s"
-      geiser-guile-warning-level 'high
-      geiser-edit-symbol-method 'window
-      geiser-mode-smart-tab-p t)
+(fset 'js-mode 'js2-mode)
 
 (autoload 'web-mode "web-mode"
 	  "Major mode for web development.")

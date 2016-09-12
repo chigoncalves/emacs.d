@@ -102,10 +102,6 @@ if it has a shebang."
   "Major mode for Lua programming language.")
 (push '("\\.lua$" . lua-mode) auto-mode-alist)
 
-(autoload 'php-mode "php-mode"
-  "Major mode for PHP programming language.")
-(push '("\\.php$" . php-mode) auto-mode-alist)
-
 (autoload 'inf-ruby-minor-mode "inf-ruby"
   "Inferior Ruby mode.")
 

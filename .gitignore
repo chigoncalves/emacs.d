@@ -1,10 +1,5 @@
-# -*- conf -*-
-
 auto-save-list/
-colour-schemes
 *.elc
-vendor/libs/misc
-artifacts
+cache
 docs/
 .cask/
-vendor/ui/themes/oldstyle/
