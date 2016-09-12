@@ -213,3 +213,21 @@
 [submodule "vendor/ui/themes/rin"]
 	path = vendor/ui/themes/rin
 	url = https://github.com/rxse/emacs-rin-theme
+[submodule "vendor/modes/utils/speck"]
+	path = vendor/modes/utils/speck
+	url = https://github.com/emacsmirror/speck
+[submodule "vendor/ui/misc/all-the-icons"]
+	path = vendor/ui/misc/all-the-icons
+	url = https://github.com/domtronn/all-the-icons.el
+[submodule "vendor/ui/misc/neotree"]
+	path = vendor/ui/misc/neotree-patched
+	url = https://github.com/domtronn/emacs-neotree
+[submodule "vendor/modes/utils/pos-tip"]
+	path = vendor/modes/utils/pos-tip
+	url = https://github.com/pitkali/pos-tip
+[submodule "vendor/ui/misc/company-quickhelp"]
+	path = vendor/ui/misc/company-quickhelp
+	url = https://github.com/expez/company-quickhelp
+[submodule "vendor/ui/powerline"]
+	path = vendor/ui/powerline
+	url = https://github.com/milkypostman/powerline
